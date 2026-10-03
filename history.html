@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<!--
+  Ericsson network sites - history of the imports
+  Files used by this page: style.css (all the design, the logo picture is inside it)
+  and script.js (all the behavior).
+  Keep these files of the website in the same folder.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <!-- Makes the page fit a phone screen. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Ericsson · Import history</title>
+
+  <!-- The design of every page. -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<!-- data-page tells script.js which page this is, so it runs only the code of this page. -->
+<body data-page="history">
+
+  <!-- ===================== TOP BAR (black, same on every page) ===================== -->
+  <header>
+
+    <!-- Ericsson logo. The picture is drawn by style.css (the .logo rule), so the link only holds
+         the word "Ericsson" for screen readers. A click goes back to the dashboard. -->
+    <a class="logo" href="index.html" aria-label="Ericsson - back to the dashboard">Ericsson</a>
+
+    <!-- Main links. The link of the current page has class="on" (white, bold, blue underline). -->
+    <nav>
+    <a href="index.html" data-nav="dash">Dashboard</a>
+    <a href="sites.html" data-nav="sites">Sites</a>
+    <a href="critical.html" data-nav="crit">Critical</a>
+    </nav>
+
+    <!-- Search bar: a click opens the search window (site ID, wilaya, date). script.js: openSearch() -->
+    <button class="search" id="sbar" style="text-align:left;cursor:pointer">Search by date or site ID…</button>
+
+    <!-- History page (all imports) and the Import data button (opens the import window). -->
+    <a class="btn" href="history.html" id="histb">History</a>
+    <button class="btn p" id="imp">Import data</button>
+  </header>
+
+
+  <!-- ===================== PAGE CONTENT: import history ===================== -->
+  <main id="hist">
+
+    <div>
+      <div class="crumb">Dashboard / History</div>
+      <h1>Import history</h1>
+      <p class="sub">Every import with its date and hour. Open one to see its dashboards and its sites.</p>
+    </div>
+
+    <!-- One row per import, newest first. script.js (renderH) writes the rows.
+         "View details" opens import.html?t=<import time>. -->
+    <section class="card">
+      <div class="tw">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>FILE</th>
+              <th>IMPORTED ON</th>
+              <th>SITES</th>
+              <th>STATUS</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="hrows"></tbody>
+        </table>
+      </div>
+
+      <!-- Shown only when there is no import yet. -->
+      <div class="empty hidden" id="hempty">No imports yet. Use Import data to add one.</div>
+    </section>
+  </main>
+
+  <!-- ===================== POP-UP WINDOW ===================== -->
+  <!-- Empty and hidden. script.js fills it with the Import window or the Search window. -->
+  <div class="ov hidden" id="mod" role="dialog" aria-modal="true" aria-label="Window">
+    <div class="modal" id="mbody"></div>
+  </div>
+
+  <!-- The behavior of every page. -->
+  <script src="script.js"></script>
+</body>
+</html>

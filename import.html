@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<!--
+  Ericsson network sites - daily overview of one import (import.html?t=...)
+  Files used by this page: style.css (all the design, the logo picture is inside it)
+  and script.js (all the behavior).
+  Keep these files of the website in the same folder.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <!-- Makes the page fit a phone screen. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Ericsson · Daily overview</title>
+
+  <!-- The design of every page. -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<!-- data-page tells script.js which page this is, so it runs only the code of this page. -->
+<body data-page="import">
+
+  <!-- ===================== TOP BAR (black, same on every page) ===================== -->
+  <header>
+
+    <!-- Ericsson logo. The picture is drawn by style.css (the .logo rule), so the link only holds
+         the word "Ericsson" for screen readers. A click goes back to the dashboard. -->
+    <a class="logo" href="index.html" aria-label="Ericsson - back to the dashboard">Ericsson</a>
+
+    <!-- Main links. The link of the current page has class="on" (white, bold, blue underline). -->
+    <nav>
+    <a href="index.html" data-nav="dash">Dashboard</a>
+    <a href="sites.html" data-nav="sites">Sites</a>
+    <a href="critical.html" data-nav="crit">Critical</a>
+    </nav>
+
+    <!-- Search bar: a click opens the search window (site ID, wilaya, date). script.js: openSearch() -->
+    <button class="search" id="sbar" style="text-align:left;cursor:pointer">Search by date or site ID…</button>
+
+    <!-- History page (all imports) and the Import data button (opens the import window). -->
+    <a class="btn" href="history.html" id="histb">History</a>
+    <button class="btn p" id="imp">Import data</button>
+  </header>
+
+
+  <!-- ===================== PAGE CONTENT: daily overview of one import ===================== -->
+  <!-- Same design as the global dashboard, for the data of one import (?t=<import time>). -->
+  <main id="day">
+
+    <!-- Title on the left, "Site availability" card on the right. -->
+    <div class="trow">
+      <div>
+        <div class="crumb"><a href="history.html" style="color:inherit">History</a> / Daily overview</div>
+        <h1>Daily overview · <span id="dday"></span></h1>
+        <p class="sub" id="dfile"></p>   <!-- file name, import date and hour, number of sites -->
+      </div>
+
+      <section class="card av2">
+        <small class="mu" style="font-weight:500;font-size:11px">SITE AVAILABILITY</small>
+        <div class="av" id="dav" style="margin-top:10px"></div>
+        <div class="stack" id="dst"></div>
+      </section>
+    </div>
+
+    <!-- "Sites by status" and "Top 5 wilayas" cards. Filled by script.js (dayView). -->
+    <section class="card" id="dss"></section>
+    <section class="card" id="dww"></section>
+
+    <!-- Button to the list of the sites of this import (keeps ?t=... in the address). -->
+    <div class="acts" style="justify-content:center">
+      <a class="btn p" id="dall" href="sites.html">View all sites from this import →</a>
+    </div>
+  </main>
+
+  <!-- ===================== POP-UP WINDOW ===================== -->
+  <!-- Empty and hidden. script.js fills it with the Import window or the Search window. -->
+  <div class="ov hidden" id="mod" role="dialog" aria-modal="true" aria-label="Window">
+    <div class="modal" id="mbody"></div>
+  </div>
+
+  <!-- The behavior of every page. -->
+  <script src="script.js"></script>
+</body>
+</html>

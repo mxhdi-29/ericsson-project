@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<!--
+  Ericsson network sites - list of all critical sites (80-100% load)
+  Files used by this page: style.css (all the design, the logo picture is inside it)
+  and script.js (all the behavior).
+  Keep these files of the website in the same folder.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <!-- Makes the page fit a phone screen. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Ericsson · Critical sites</title>
+
+  <!-- The design of every page. -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<!-- data-page tells script.js which page this is, so it runs only the code of this page. -->
+<body data-page="crit">
+
+  <!-- ===================== TOP BAR (black, same on every page) ===================== -->
+  <header>
+
+    <!-- Ericsson logo. The picture is drawn by style.css (the .logo rule), so the link only holds
+         the word "Ericsson" for screen readers. A click goes back to the dashboard. -->
+    <a class="logo" href="index.html" aria-label="Ericsson - back to the dashboard">Ericsson</a>
+
+    <!-- Main links. The link of the current page has class="on" (white, bold, blue underline). -->
+    <nav>
+    <a href="index.html" data-nav="dash">Dashboard</a>
+    <a href="sites.html" data-nav="sites">Sites</a>
+    <a href="critical.html" class="on" data-nav="crit">Critical</a>
+    </nav>
+
+    <!-- Search bar: a click opens the search window (site ID, wilaya, date). script.js: openSearch() -->
+    <button class="search" id="sbar" style="text-align:left;cursor:pointer">Search by date or site ID…</button>
+
+    <!-- History page (all imports) and the Import data button (opens the import window). -->
+    <a class="btn" href="history.html" id="histb">History</a>
+    <button class="btn p" id="imp">Import data</button>
+  </header>
+
+
+  <!-- ===================== PAGE CONTENT: list of sites ===================== -->
+  <main id="list">
+
+    <!-- Title. script.js changes these 3 texts on the Critical page and for the sites of an import. -->
+    <div>
+      <div class="crumb" id="lc">Dashboard / All sites</div>
+      <h1 id="lh">All sites</h1>
+      <p class="sub" id="ls">Filter, sort and open any site to see its full details.</p>
+    </div>
+
+    <!-- FILTERS: site ID, wilaya, day, condition. They filter the table while you type or choose. -->
+    <section class="card">
+      <div class="filters">
+        <label>Site ID
+          <input id="fid" placeholder="e.g. ALG-0412">
+        </label>
+
+        <!-- The wilaya names are added by script.js. -->
+        <label>Wilaya
+          <select id="fw"><option value="">All wilayas</option></select>
+        </label>
+
+        <label>Day
+          <input id="fd" type="date">
+        </label>
+
+        <!-- Condition = status of the site. The load limits are the project thresholds. -->
+        <label>Condition
+          <select id="fc">
+            <option value="">All conditions</option>
+            <option value="crit">Critical (80–100%)</option>
+            <option value="med">Medium (50–80%)</option>
+            <option value="good">Good (0–50%)</option>
+            <option value="down">Not working</option>
+          </select>
+        </label>
+      </div>
+
+      <!-- Sort by load (high to low or low to high) and the Reset button. -->
+      <div class="bar">
+        <span class="mu" style="font-size:12px;font-weight:500">Sort by load</span>
+        <div class="seg" id="sort">
+          <button class="on" data-s="desc">High → Low</button>
+          <button data-s="asc">Low → High</button>
+        </div>
+        <span class="sp"></span>
+        <button class="btn" id="reset">Reset</button>
+      </div>
+    </section>
+
+    <!-- THE LIST: 100 sites per page. Columns: # · site ID · last update · wilaya · load bar · % · More info.
+         The rows (tbody) are written by script.js (render). -->
+    <section class="card">
+      <div class="head">
+        <b style="font-size:16px" id="count"></b>   <!-- "1,500 sites" -->
+        <span class="mu" id="range"></span>         <!-- "· showing 1–100" -->
+      </div>
+
+      <div class="tw">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>SITE ID</th>
+              <th>LAST UPDATE</th>
+              <th>WILAYA</th>
+              <th style="width:30%">LOAD</th>
+              <th class="r">%</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+
+      <!-- Shown only when no site matches the filters. -->
+      <div class="empty hidden" id="empty">No sites match these filters. Reset the filters to see all sites.</div>
+
+      <!-- Page numbers (previous, 1, 2 … last, next). -->
+      <div class="pg" id="pg"></div>
+    </section>
+  </main>
+
+  <!-- ===================== POP-UP WINDOW ===================== -->
+  <!-- Empty and hidden. script.js fills it with the Import window or the Search window. -->
+  <div class="ov hidden" id="mod" role="dialog" aria-modal="true" aria-label="Window">
+    <div class="modal" id="mbody"></div>
+  </div>
+
+  <!-- The behavior of every page. -->
+  <script src="script.js"></script>
+</body>
+</html>

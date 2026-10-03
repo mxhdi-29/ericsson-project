@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<!--
+  Ericsson network sites - dashboard (global overview)
+  Files used by this page: style.css (all the design, the logo picture is inside it)
+  and script.js (all the behavior).
+  Keep these files of the website in the same folder.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <!-- Makes the page fit a phone screen. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Ericsson · Network sites overview</title>
+
+  <!-- The design of every page. -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<!-- data-page tells script.js which page this is, so it runs only the code of this page. -->
+<body data-page="dash">
+
+  <!-- ===================== TOP BAR (black, same on every page) ===================== -->
+  <header>
+
+    <!-- Ericsson logo. The picture is drawn by style.css (the .logo rule), so the link only holds
+         the word "Ericsson" for screen readers. A click goes back to the dashboard. -->
+    <a class="logo" href="index.html" aria-label="Ericsson - back to the dashboard">Ericsson</a>
+
+    <!-- Main links. The link of the current page has class="on" (white, bold, blue underline). -->
+    <nav>
+    <a href="index.html" class="on" data-nav="dash">Dashboard</a>
+    <a href="sites.html" data-nav="sites">Sites</a>
+    <a href="critical.html" data-nav="crit">Critical</a>
+    </nav>
+
+    <!-- Search bar: a click opens the search window (site ID, wilaya, date). script.js: openSearch() -->
+    <button class="search" id="sbar" style="text-align:left;cursor:pointer">Search by date or site ID…</button>
+
+    <!-- History page (all imports) and the Import data button (opens the import window). -->
+    <a class="btn" href="history.html" id="histb">History</a>
+    <button class="btn p" id="imp">Import data</button>
+  </header>
+
+
+  <!-- ===================== PAGE CONTENT: global dashboard ===================== -->
+  <main id="dash">
+
+    <!-- Title on the left, "Site availability" card on the right. -->
+    <div class="trow">
+      <div>
+        <h1>Network sites overview</h1>
+        <p class="sub">Global view across all sites · load thresholds: 0–50% good · 50–80% medium · 80–100% critical</p>
+      </div>
+
+      <!-- Site availability: total / working / not working + blue and grey bar.
+           script.js (dayView) fills #gav (the 3 numbers) and #gst (the bar). -->
+      <section class="card av2">
+        <small class="mu" style="font-weight:500;font-size:11px">SITE AVAILABILITY</small>
+        <div class="av" id="gav" style="margin-top:10px"></div>
+        <div class="stack" id="gst"></div>
+      </section>
+    </div>
+
+    <!-- "Sites by status" card: donut + columns + breakdown (critical / medium / good). Filled by dayView. -->
+    <section class="card" id="gss"></section>
+
+    <!-- "Top 5 wilayas · critical sites" card: donut + columns + table. Filled by dayView. -->
+    <section class="card" id="gww"></section>
+
+    <!-- Two lists side by side. Filled by gLists. Every row is clickable and opens the
+         page of that site (site.html?id=...). -->
+    <div class="two">
+      <section class="card" id="gtop"></section>   <!-- Top 10 critical sites (red) -->
+      <section class="card" id="gbot"></section>   <!-- Bottom 10, near empty (green) -->
+    </div>
+
+    <!-- Button to the full list of sites. -->
+    <div class="acts" style="justify-content:center">
+      <a class="btn p" id="gall" href="sites.html">View full list of sites →</a>
+    </div>
+  </main>
+
+  <!-- ===================== POP-UP WINDOW ===================== -->
+  <!-- Empty and hidden. script.js fills it with the Import window or the Search window. -->
+  <div class="ov hidden" id="mod" role="dialog" aria-modal="true" aria-label="Window">
+    <div class="modal" id="mbody"></div>
+  </div>
+
+  <!-- The behavior of every page. -->
+  <script src="script.js"></script>
+</body>
+</html>

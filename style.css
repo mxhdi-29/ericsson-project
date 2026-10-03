@@ -1,0 +1,1062 @@
+/* ============================================================
+   ERICSSON NETWORK SITES - style.css
+   One stylesheet for every page (index, sites, critical, site,
+   history, import). Sections:
+     1. Colors and theme
+     2. Base reset, typography and utilities
+     3. Header and navigation
+     4. Buttons
+     5. Page layout
+     6. Cards
+     7. Site availability card
+     8. Charts: donut and columns
+     9. Detail panels next to the charts
+    10. Load bars, status colors and labels
+    11. Filters and sorting
+    12. Tables
+    13. Pagination and empty state
+    14. Site detail page
+    15. Pop-up window (import and search)
+    16. Small screens
+   Status colors follow the rules of the project:
+   0-50% green (good), 50-80% orange (medium), 80-100% red (critical),
+   grey = site not working.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. COLORS AND THEME
+   ------------------------------------------------------------ */
+
+/* :root holds the color variables used by every other rule, so a color
+   is changed in one place. It also keeps content clear of phone bars. */
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);     /* space under the phone status bar */
+  padding-bottom: env(safe-area-inset-bottom, 0px); /* space above the phone home bar */
+  --bg: #fff;        /* page and card background */
+  --s2: #f2f3f5;     /* light grey surface: inputs, tiles, rails */
+  --bd: #e3e5e8;     /* thin borders and separator lines */
+  --tx: #000;        /* main text */
+  --mu: #6b6f76;     /* muted (gray) text */
+  --blue: #0082f0;   /* Ericsson blue: primary buttons, active link, working sites */
+  --crit: #e5352b;   /* critical, 80-100% load (red) */
+  --med: #f59e0b;    /* medium, 50-80% load (orange) */
+  --good: #12a150;   /* good, 0-50% load (green) */
+  --down: #8a8f98;   /* site not working (grey) */
+  --sh: 0 2px 8px rgba(0, 0, 0, .05); /* soft card shadow */
+}
+
+
+
+/* ------------------------------------------------------------
+   2. BASE RESET, TYPOGRAPHY AND SMALL UTILITIES
+   Rules that apply to every page.
+   ------------------------------------------------------------ */
+/* Every element: padding and border are counted inside its width, so boxes never overflow. */
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+/* Root element: makes anchor jumps stop below the phone status bar. */
+html {
+  scroll-padding-top: env(safe-area-inset-top,0px);
+}
+
+/* Page background, text color and the default font (Inter, then system fonts). */
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--tx);
+  font: 14px/1.45 Inter,"Helvetica Neue",Arial,sans-serif;
+}
+
+/* Form controls copy the page font and text color instead of the browser defaults. */
+button, input, select {
+  font: inherit;
+  color: inherit;
+}
+
+/* All buttons show the pointer hand. */
+button {
+  cursor: pointer;
+}
+
+/* Blue outline when you reach an element with the keyboard (accessibility). */
+:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+/* Big page title (Network sites overview, All sites ...). */
+h1 {
+  font-size: 32px;
+  margin: 4px 0 6px;
+}
+
+/* Gray sentence under a page title or a card title. */
+.sub {
+  color: var(--mu);
+  margin: 0;
+}
+
+/* Utility: muted (gray) text. */
+.mu {
+  color: var(--mu);
+}
+
+/* Utility: semi-bold text. */
+.b {
+  font-weight: 600;
+}
+
+/* Utility: right-aligned text, used for the % and button columns of tables. */
+.r {
+  text-align: right;
+}
+
+/* Utility: hides an element completely (used on the empty-state message and the pop-up window). */
+.hidden {
+  display: none;
+}
+
+
+/* ------------------------------------------------------------
+   3. HEADER AND NAVIGATION
+   Top bar that is the same on every page: logo, nav links, search, History, Import.
+   ------------------------------------------------------------ */
+/* The top bar: one row, wraps on small screens, thin line underneath. */
+header {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 18px 48px;
+  border-bottom: 1px solid var(--bd);
+  flex-wrap: wrap;
+}
+
+/* Ericsson logo in the top bar. It is a link (back to the dashboard).
+   The logo picture is built into this file (variable --logo-img, section 19 at the end),
+   so the website does not need any other file or folder to show it.
+   The link holds the word "Ericsson" for screen readers; it is moved out of sight and
+   the picture is drawn as the background of the link. */
+.logo {
+  display: block;
+  width: 125px;
+  height: 28px;
+  background: var(--logo-img) no-repeat left center / contain;
+  font-size: 0;      /* the word "Ericsson" is not shown */
+  line-height: 0;
+  overflow: hidden;
+}
+
+/* The logo link keeps the text color and has no underline. */
+a.logo {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Group of nav links, takes the free space so the search sits to the right. */
+nav {
+  display: flex;
+  gap: 26px;
+  flex: 1;
+}
+
+/* One nav link (Dashboard, Sites, Critical): gray with a transparent underline. */
+nav a {
+  color: var(--mu);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 4px 0;
+  border-bottom: 2px solid transparent;
+}
+
+/* The link of the page you are on: black, bold, blue underline. */
+nav a.on {
+  color: var(--tx);
+  font-weight: 600;
+  border-color: var(--blue);
+}
+
+/* The search bar in the top bar (a button that opens the search window). */
+.search {
+  background: var(--s2);
+  border: 1px solid var(--bd);
+  border-radius: 999px;
+  padding: 10px 16px;
+  width: 280px;
+  color: var(--mu);
+  font-size: 13px;
+}
+
+
+/* ------------------------------------------------------------
+   4. BUTTONS
+   Pill-shaped buttons used everywhere.
+   ------------------------------------------------------------ */
+/* Standard outline button (History, Reset, Cancel, View all ...). */
+.btn {
+  border-radius: 999px;
+  padding: 10px 20px;
+  font-weight: 600;
+  font-size: 13px;
+  border: 1px solid var(--bd);
+  background: transparent;
+}
+
+/* Primary button: filled Ericsson blue with white text (Import data, Search ...). */
+.btn.p {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: #fff;
+}
+
+/* A disabled button looks faded. */
+.btn:disabled {
+  opacity: .45;
+  cursor: default;
+}
+
+/* Links that look like buttons: no underline, inherit the text color. */
+a.btn, a.more, a.hv {
+  display: inline-block;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* A primary button that is a link keeps white text. */
+a.btn.p {
+  color: #fff;
+}
+
+
+/* ------------------------------------------------------------
+   5. PAGE LAYOUT
+   Containers that place the blocks of each page.
+   ------------------------------------------------------------ */
+/* Page content area: side padding and a vertical stack with 24px between blocks. */
+main {
+  padding: 32px 48px 48px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr); /* one column that may shrink: wide tables scroll inside their card instead of widening the page */
+  gap: 24px;
+}
+
+/* Small breadcrumb line above a title ("Dashboard / All sites"). */
+.crumb {
+  color: var(--mu);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Title row of the dashboards: title on the left, availability card on the right. */
+.trow {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* The title block of that row takes the remaining width. */
+.trow>div:first-child {
+  flex: 1;
+  min-width: 260px;
+}
+
+/* Two cards side by side (top 10 critical and bottom 10 near empty). */
+.two {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px;
+}
+
+/* Row of buttons aligned to the right (pop-up window and page bottoms). */
+.acts {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+
+/* ------------------------------------------------------------
+   6. CARDS
+   White rounded boxes that hold each block of content.
+   ------------------------------------------------------------ */
+/* The card: white background, light border, rounded corners, soft shadow. */
+.card {
+  background: var(--bg);
+  border: 1px solid var(--bd);
+  border-radius: 16px;
+  box-shadow: var(--sh);
+  padding: 20px 24px;
+}
+
+/* The two chart cards (sites by status, top 5 wilayas) are a little roomier. */
+#dss, #dww {
+  padding: 24px;
+}
+
+/* Space between the chart-card title and its gray subtitle. */
+#dss .sub, #dww .sub {
+  margin-top: 4px;
+}
+
+
+/* ------------------------------------------------------------
+   7. SITE AVAILABILITY CARD
+   Total / working / not working numbers and the blue-grey bar.
+   ------------------------------------------------------------ */
+/* The small card placed next to the page title (fixed width on desktop). */
+.av2 {
+  width: 520px;
+  max-width: 100%;
+  padding: 16px 20px;
+}
+
+/* Row that holds the three numbers. */
+.av {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 0;
+}
+
+/* One number block with a thin separator on its left. */
+.av>div {
+  flex: 1;
+  min-width: 150px;
+  padding: 0 20px;
+  border-left: 1px solid var(--bd);
+}
+
+/* The first block has no separator and no left padding. */
+.av>div:first-child {
+  border: 0;
+  padding-left: 0;
+}
+
+/* The big number (1,500 / 1,248 / 252). */
+.av b {
+  font-size: 28px;
+  display: block;
+}
+
+/* The horizontal bar: blue part = working sites, grey part = not working. */
+.stack {
+  display: flex;
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+  background: var(--s2);
+  margin-top: 16px;
+}
+
+
+/* ------------------------------------------------------------
+   8. CHARTS: DONUT AND COLUMNS
+   Used by Sites by status and Top 5 wilayas.
+   ------------------------------------------------------------ */
+/* One chart row: donut, columns and detail panel side by side. */
+.cc {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+/* The donut box (180 x 180). The ring itself is an SVG drawn by script.js. */
+.dn {
+  position: relative;
+  width: 180px;
+  height: 180px;
+}
+
+/* Number in the middle of the donut. */
+.dn span {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* Small label under that number (sites, critical sites). */
+.dn small {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--mu);
+}
+
+/* Legend under the donut: one line per color with its percentage. */
+.lg {
+  display: grid;
+  gap: 8px;
+  font-size: 13px;
+  margin-top: 16px;
+}
+
+/* The round color dot of a legend line. */
+.lg i {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+/* The column chart: bars sit on one baseline and are centered. */
+.cols {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 28px;
+  height: auto;
+  min-width: 0;
+}
+
+/* Inside a chart row the column chart keeps a fixed 360px width. */
+.cc .cols {
+  flex: none;
+  width: 360px;
+  max-width: 100%;
+}
+
+/* One column: value on top, bar, then its label. */
+.cols div {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  height: auto;
+  font-size: 12px;
+  color: var(--mu);
+  text-align: center;
+}
+
+/* The number above a bar. */
+.cols b {
+  color: var(--tx);
+  font-size: 16px;
+}
+
+/* The bar. Width comes from the --bw variable set by script.js; rounded top. */
+.cols i {
+  display: block;
+  width: var(--bw,56px);
+  max-width: none;
+  border-radius: 8px 8px 0 0;
+}
+
+
+/* ------------------------------------------------------------
+   9. DETAIL PANELS NEXT TO THE CHARTS
+   Breakdown tiles and the wilaya table on the right of each chart.
+   ------------------------------------------------------------ */
+/* The panel: separated from the chart by a thin left line. */
+.dp {
+  flex: 1;
+  min-width: 280px;
+  border-left: 1px solid var(--bd);
+  padding-left: 40px;
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+
+/* One breakdown tile (Critical / Medium / Good) on a light grey background. */
+.tile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--s2);
+  border-radius: 12px;
+  padding: 12px 16px;
+}
+
+/* The colored vertical stripe at the start of a tile. */
+.tile>i {
+  width: 4px;
+  height: 40px;
+  border-radius: 2px;
+  flex: none;
+}
+
+/* One row of the critical-rate-per-wilaya table (4 columns). */
+.rw {
+  display: grid;
+  grid-template-columns: 1.2fr .7fr .9fr 1.2fr;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 0;
+  border-top: 1px solid var(--bd);
+  font-size: 13px;
+}
+
+/* The header row of that table: no line, small gray text. */
+.rw.h {
+  border: 0;
+  font-size: 11px;
+  color: var(--mu);
+  padding: 0;
+}
+
+
+/* ------------------------------------------------------------
+   10. LOAD BARS, STATUS COLORS AND LABELS
+   The colors that carry the meaning: red = critical, orange = medium, green = good, grey = not working.
+   ------------------------------------------------------------ */
+/* The grey rail behind a load bar. */
+.track {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--s2);
+  overflow: hidden;
+  width: 100%;
+  min-width: 140px;
+}
+
+/* The colored part of a load bar (its width is the load %). */
+.track i {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+}
+
+/* Text color: critical (red). */
+.c-crit {
+  color: var(--crit);
+}
+
+/* Text color: medium (orange). */
+.c-med {
+  color: var(--med);
+}
+
+/* Text color: good (green). */
+.c-good {
+  color: var(--good);
+}
+
+/* Text color: not working (grey). */
+.c-down {
+  color: var(--down);
+}
+
+/* Rounded label (Successful, Failed, Critical ...). Its color is set inline. */
+.pill {
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+}
+
+
+/* ------------------------------------------------------------
+   11. FILTERS AND SORTING (sites pages)
+   The card above the list of sites.
+   ------------------------------------------------------------ */
+/* Four fields in a row (site ID, wilaya, day, condition). */
+.filters {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 16px;
+}
+
+/* A field label with its input underneath. */
+label {
+  display: grid;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--mu);
+}
+
+/* Text boxes and drop-downs: grey fill, thin border, rounded. */
+input, select {
+  background: var(--s2);
+  border: 1px solid var(--bd);
+  border-radius: 10px;
+  padding: 11px 14px;
+  font-size: 13px;
+  width: 100%;
+}
+
+/* Row under the fields: sort switch, free space, Reset button. */
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+/* Flexible spacer that pushes Reset to the right. */
+.bar .sp {
+  flex: 1;
+}
+
+/* Segmented switch (High → Low / Low → High): rounded grey track. */
+.seg {
+  display: flex;
+  background: var(--s2);
+  border-radius: 999px;
+  padding: 4px;
+  gap: 4px;
+}
+
+/* One option of the switch. */
+.seg button {
+  border: 0;
+  background: transparent;
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--mu);
+}
+
+/* The selected option: white with a small shadow. */
+.seg button.on {
+  background: var(--bg);
+  color: var(--tx);
+  box-shadow: 0 1px 3px rgba(0,0,0,.15);
+}
+
+
+/* ------------------------------------------------------------
+   12. TABLES (sites list, top 10 lists, history)
+   ------------------------------------------------------------ */
+/* Line above a table: the count and the 'showing 1–100' text. */
+.head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding-bottom: 14px;
+}
+
+/* Wrapper that lets a wide table scroll sideways on small screens. */
+.tw {
+  overflow-x: auto;
+}
+
+/* The table itself: full width, no gaps between cells. */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 820px;
+}
+
+/* Column header cell: small gray text on a light grey background. */
+th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--mu);
+  background: var(--s2);
+  padding: 10px 14px;
+}
+
+/* Rounded left corner of the header. */
+th:first-child {
+  border-radius: 8px 0 0 8px;
+}
+
+/* Rounded right corner of the header. */
+th:last-child {
+  border-radius: 0 8px 8px 0;
+}
+
+/* Normal cell: padding and a thin line below. */
+td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--bd);
+}
+
+/* The 'More info' button of a row. */
+.more {
+  border: 1px solid var(--bd);
+  background: transparent;
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Light grey background when the mouse is over it. */
+.more:hover {
+  background: var(--s2);
+}
+
+/* The 'View details' button of the history table. */
+.hv {
+  border: 1px solid var(--bd);
+  background: transparent;
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Light grey background when the mouse is over it. */
+.hv:hover {
+  background: var(--s2);
+}
+
+
+/* A site ID that is a link (top 10 and bottom 10 lists): bold text, blue and underlined on hover. */
+a.sl {
+  color: inherit;
+  text-decoration: none;
+  font-weight: 600;
+}
+a.sl:hover {
+  color: var(--blue);
+  text-decoration: underline;
+}
+
+/* A table row that opens the site when you click anywhere on it. */
+tr.go {
+  cursor: pointer;
+}
+
+/* Light grey background under the mouse, so you see the row is clickable. */
+tr.go:hover td {
+  background: var(--s2);
+}
+
+/* ------------------------------------------------------------
+   13. PAGINATION AND EMPTY STATE
+   ------------------------------------------------------------ */
+/* Row of page numbers under the list (100 sites per page). */
+.pg {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  padding-top: 18px;
+  flex-wrap: wrap;
+}
+
+/* One round page button. */
+.pg button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 0;
+  background: transparent;
+  font-weight: 500;
+}
+
+/* The current page: blue circle with white number. */
+.pg button.on {
+  background: var(--blue);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Previous / next button that cannot be used, and the '…' marks. */
+.pg button:disabled {
+  opacity: .35;
+  cursor: default;
+}
+
+/* Message shown when no site matches the filters. */
+.empty {
+  padding: 32px;
+  text-align: center;
+  color: var(--mu);
+}
+
+
+/* ------------------------------------------------------------
+   14. SITE DETAIL PAGE
+   Fields, load summary, line graph and report.
+   ------------------------------------------------------------ */
+/* Grid of information tiles (4 columns). */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 16px;
+}
+
+/* One information tile: light grey, rounded. */
+.k {
+  background: var(--s2);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+/* Name of the field (NE type, End time ...). */
+.k small {
+  display: block;
+  color: var(--mu);
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+/* Value of the field. */
+.k b {
+  font-size: 16px;
+}
+
+/* Text inside the load graph (dates and percentages). */
+.gl text {
+  font-size: 11px;
+  fill: var(--mu);
+}
+
+/* Grid lines and dashed 50% / 80% lines of the load graph. */
+.gl line {
+  stroke-width: 1;
+}
+
+
+/* ------------------------------------------------------------
+   15. POP-UP WINDOW (import and search)
+   One window used for importing a file and for searching sites.
+   ------------------------------------------------------------ */
+/* Dark transparent layer that covers the page and holds the window near the top. */
+.ov {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 12vh 16px;
+  z-index: 10;
+}
+
+/* Closed state of that layer. */
+.ov.hidden {
+  display: none;
+}
+
+/* The white window itself. */
+.modal {
+  background: var(--bg);
+  border: 1px solid var(--bd);
+  border-radius: 16px;
+  width: 440px;
+  max-width: 100%;
+  padding: 24px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.25);
+  display: grid;
+  gap: 14px;
+}
+
+/* Window title. */
+.modal h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+/* Window text (gray). */
+.modal p {
+  margin: 0;
+  color: var(--mu);
+}
+
+/* The dashed 'Select a file' zone. */
+.drop {
+  position: relative;
+  display: grid;
+  gap: 4px;
+  justify-items: center;
+  border: 1.5px dashed var(--bd);
+  border-radius: 12px;
+  padding: 28px;
+  cursor: pointer;
+  text-align: center;
+  background: var(--s2);
+}
+
+/* The real file input is hidden but still reachable with the keyboard. */
+.drop input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+/* Blue outline on the zone when the file input has focus. */
+.drop:focus-within {
+  outline: 2px solid var(--blue);
+}
+
+/* Round icon of the result screens (green check or red exclamation mark). */
+.ic {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+
+/* ------------------------------------------------------------
+   16. SMALL SCREENS (tablets and phones, up to 900px wide)
+   ------------------------------------------------------------ */
+@media (max-width: 900px) {
+  /* less side padding on the top bar and the pages */
+  header, main {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  /* filters and info tiles go from 4 columns to 2 */
+  .filters, .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  /* the search bar takes the full width */
+  .search {
+    width: 100%;
+  }
+  /* the two top-10 cards are stacked */
+  .two {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  /* the detail panel goes under the chart, without the left line */
+  .dp {
+    border-left: 0;
+    padding-left: 0;
+  }
+}
+
+/* ------------------------------------------------------------
+   17. PHONES (up to 600px wide)
+   Same page, tighter: smaller paddings, a two-row top bar,
+   charts stacked, wide tables scroll inside their card.
+   ------------------------------------------------------------ */
+@media (max-width: 600px) {
+  /* Top bar: logo and buttons on the first row, links, then the search bar. */
+  header {
+    padding: 14px 16px;
+    gap: 12px 10px;
+  }
+  .logo {
+    order: 1;
+    flex: 1 1 auto;      /* takes the free space so the buttons sit on the right */
+    max-width: 98px;     /* smaller logo on phones (22px tall) */
+    height: 22px;
+    background-position: left center;
+  }
+  header > .btn {
+    order: 2;
+    padding: 8px 14px;
+  }
+  nav {
+    order: 3;
+    flex: 0 0 100%;
+    gap: 22px;
+    overflow-x: auto;
+  }
+  .search {
+    order: 4;
+    flex: 0 0 100%;
+  }
+
+  /* Page area and titles. */
+  main {
+    padding: 20px 16px 32px;
+    gap: 16px;
+  }
+  h1 {
+    font-size: 26px;
+  }
+  .card {
+    padding: 16px;
+  }
+  #dss, #dww {
+    padding: 16px;
+  }
+  .trow {
+    gap: 16px;
+  }
+  .trow > div:first-child {
+    min-width: 0;
+  }
+
+  /* Availability card: the three numbers share the row, smaller. */
+  .av2 {
+    width: 100%;
+  }
+  .av > div {
+    min-width: 0;
+    padding: 0 10px;
+  }
+  .av b {
+    font-size: 22px;
+  }
+
+  /* Chart rows: donut, columns and panel are stacked and use the full width. */
+  .cc {
+    gap: 24px;
+  }
+  .cc .cols {
+    width: 100%;
+    flex: 1 1 100%;
+    gap: 12px;
+  }
+  .dp {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  /* Filters become one column; the sort switch and Reset share the row. */
+  .filters, .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .filters {
+    grid-template-columns: 1fr;
+  }
+  .rw {
+    gap: 6px;
+    font-size: 12px;
+  }
+
+  /* Pop-up windows sit near the top, with less padding. */
+  .ov {
+    padding: 8vh 12px;
+  }
+  .modal {
+    padding: 18px;
+  }
+}
+
+/* ------------------------------------------------------------
+   18. BLACK TOP BAR
+   The top bar is black (Ericsson style). Inside it the color variables
+   are set to white / grey values, so the logo, links, search bar and
+   buttons are white / grey on black while the rest of the page is white.
+   ------------------------------------------------------------ */
+
+/* The black bar. The variables below only apply inside the bar. */
+header {
+  background: #000;
+  color: #fff;
+  border-bottom: 1px solid #26262a;
+  --bg: #000;      /* bar background */
+  --s2: #1a1a1d;   /* search bar fill */
+  --bd: #2a2a2e;   /* borders of the search bar and outline buttons */
+  --tx: #fff;      /* logo, active link, button text */
+  --mu: #9a9aa2;   /* inactive links, search placeholder */
+  --sh: none;
+}
+
+/* ------------------------------------------------------------
+   19. LOGO PICTURE (built in)
+   The white Ericsson logo (300 x 67 px, white on a transparent background) stored
+   as text, so that no separate picture file is needed. It is used by the .logo rule in
+   section 3. To change the logo, replace everything between url(" and ").
+   ------------------------------------------------------------ */
+:root {
+  --logo-img: url("data:image/png;base64,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");
+}

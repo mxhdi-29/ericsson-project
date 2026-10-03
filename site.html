@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<!--
+  Ericsson network sites - information of one site (site.html?id=...)
+  Files used by this page: style.css (all the design, the logo picture is inside it)
+  and script.js (all the behavior).
+  Keep these files of the website in the same folder.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <!-- Makes the page fit a phone screen. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Ericsson · Site</title>
+
+  <!-- The design of every page. -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<!-- data-page tells script.js which page this is, so it runs only the code of this page. -->
+<body data-page="site">
+
+  <!-- ===================== TOP BAR (black, same on every page) ===================== -->
+  <header>
+
+    <!-- Ericsson logo. The picture is drawn by style.css (the .logo rule), so the link only holds
+         the word "Ericsson" for screen readers. A click goes back to the dashboard. -->
+    <a class="logo" href="index.html" aria-label="Ericsson - back to the dashboard">Ericsson</a>
+
+    <!-- Main links. The link of the current page has class="on" (white, bold, blue underline). -->
+    <nav>
+    <a href="index.html" data-nav="dash">Dashboard</a>
+    <a href="sites.html" class="on" data-nav="sites">Sites</a>
+    <a href="critical.html" data-nav="crit">Critical</a>
+    </nav>
+
+    <!-- Search bar: a click opens the search window (site ID, wilaya, date). script.js: openSearch() -->
+    <button class="search" id="sbar" style="text-align:left;cursor:pointer">Search by date or site ID…</button>
+
+    <!-- History page (all imports) and the Import data button (opens the import window). -->
+    <a class="btn" href="history.html" id="histb">History</a>
+    <button class="btn p" id="imp">Import data</button>
+  </header>
+
+
+  <!-- ===================== PAGE CONTENT: one site ===================== -->
+  <!-- script.js (initSite / renderSite) reads ?id=... in the address and fills this page. -->
+  <main id="detail">
+
+    <!-- Title: breadcrumb with a link back to the list, site ID, wilaya and condition. -->
+    <div>
+      <div class="crumb"><a href="sites.html" data-back style="color:inherit">All sites</a> / <span id="dcr"></span></div>
+      <h1 id="dt"></h1>
+      <p class="sub" id="ds"></p>
+    </div>
+
+    <!-- Information of the site: ID, wilaya, condition, NE type, entity type, measure point,
+         end time and the failure cause (only if the site is not working). -->
+    <section class="card">
+      <div class="grid" id="dg"></div>
+    </section>
+
+    <!-- Load summary: average, maximum and minimum load of the last 7 days. -->
+    <section class="card">
+      <b>Load summary</b>
+      <p class="sub" style="font-size:13px;margin:4px 0 14px">Calculated from the imported data (last 7 days, working days only)</p>
+      <div class="grid" style="grid-template-columns:repeat(3,1fr)" id="dl"></div>
+    </section>
+
+    <!-- Load by day: line graph, days on the x axis and percentage on the y axis (SVG drawn by script.js). -->
+    <section class="card">
+      <b>Load by day</b>
+      <div class="tw" style="margin-top:12px">
+        <div id="dh" class="gl" style="min-width:520px"></div>
+      </div>
+    </section>
+
+    <!-- Report: one fixed text for each condition (critical, medium, good, not working). -->
+    <section class="card">
+      <div style="display:flex;align-items:center;gap:12px">
+        <b>Report</b>
+        <span class="pill" id="rp"></span>
+      </div>
+      <p id="rt" style="margin:12px 0 0;line-height:1.6"></p>
+    </section>
+
+    <div>
+      <a class="btn" href="sites.html" data-back>Back to all sites</a>
+    </div>
+  </main>
+
+  <!-- ===================== POP-UP WINDOW ===================== -->
+  <!-- Empty and hidden. script.js fills it with the Import window or the Search window. -->
+  <div class="ov hidden" id="mod" role="dialog" aria-modal="true" aria-label="Window">
+    <div class="modal" id="mbody"></div>
+  </div>
+
+  <!-- The behavior of every page. -->
+  <script src="script.js"></script>
+</body>
+</html>
